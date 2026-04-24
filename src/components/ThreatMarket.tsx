@@ -41,7 +41,7 @@ export function ThreatMarket() {
               Threat market · live feed
             </p>
             <h2 className="mt-1 text-3xl font-semibold tracking-tight sm:text-4xl">
-              Trending phishing campaigns
+              Current phishing campaigns
             </h2>
             <p className="mt-2 max-w-xl text-sm text-muted-foreground">
               Ranked by global detection volume across the PhishGuard network in the last 24 hours.
