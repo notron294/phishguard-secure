@@ -12,6 +12,7 @@ import { EmptyDashboard } from "@/components/EmptyDashboard";
 import { ThreatMarket } from "@/components/ThreatMarket";
 import { LearnGrid } from "@/components/LearnGrid";
 import { ApiSection } from "@/components/ApiSection";
+import { Playground } from "@/components/Playground";
 import { analyzeEmail, type ScanResult } from "@/lib/phishing";
 
 export const Route = createFileRoute("/")({
@@ -96,6 +97,7 @@ function Index() {
         <ThreatMarket />
         <LearnGrid />
         <ApiSection />
+        <Playground />
 
         <footer className="border-t border-border px-6 py-10">
           <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-3 text-xs text-muted-foreground sm:flex-row">

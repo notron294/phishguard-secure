@@ -1,4 +1,5 @@
 import { TrendingUp, TrendingDown, Flame } from "lucide-react";
+import { ThreatMap } from "./ThreatMap";
 
 interface Threat {
   rank: number;
@@ -41,7 +42,7 @@ export function ThreatMarket() {
               Threat market · live feed
             </p>
             <h2 className="mt-1 text-3xl font-semibold tracking-tight sm:text-4xl">
-              Trending phishing campaigns
+              Current phishing campaigns
             </h2>
             <p className="mt-2 max-w-xl text-sm text-muted-foreground">
               Ranked by global detection volume across the PhishGuard network in the last 24 hours.
@@ -53,6 +54,8 @@ export function ThreatMarket() {
             <span className="rounded-full border border-border bg-surface px-2.5 py-1">30d</span>
           </div>
         </div>
+
+        <ThreatMap />
 
         <div className="overflow-hidden rounded-2xl border border-border bg-surface/40 backdrop-blur">
           <div className="overflow-x-auto">
