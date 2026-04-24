@@ -31,8 +31,8 @@ const HOTSPOTS: Hotspot[] = [
 
 const SEV = {
   low: "var(--success)",
-  med: "var(--primary)",
-  high: "var(--warning)",
+  med: "var(--warning)",
+  high: "var(--critical)",
   crit: "var(--critical)",
 };
 
@@ -85,7 +85,7 @@ export function ThreatMap() {
         </div>
       </div>
 
-      <div className="relative aspect-[2/1] w-full bg-[oklch(0.13_0.012_260)]">
+      <div className="relative aspect-[2/1] w-full">
         {/* Subtle grid background */}
         <div
           className="pointer-events-none absolute inset-0 opacity-40"
@@ -96,60 +96,54 @@ export function ThreatMap() {
           }}
         />
 
-        <svg
-          viewBox="0 0 1000 500"
-          className="absolute inset-0 h-full w-full"
-          preserveAspectRatio="xMidYMid meet"
-        >
-          {/* Stylized continent silhouettes (very low-fi, dot-grid style) */}
-          <g fill="oklch(0.28 0.012 260)" stroke="oklch(0.32 0.014 260)" strokeWidth="0.5">
-            {/* North America */}
-            <path d="M 130 110 Q 180 90 240 100 Q 290 115 300 160 Q 305 200 270 230 Q 230 250 200 240 Q 160 225 140 195 Q 120 160 130 110 Z" />
-            {/* South America */}
-            <path d="M 270 270 Q 305 265 320 295 Q 330 340 315 380 Q 300 420 285 415 Q 270 405 268 370 Q 265 320 270 270 Z" />
-            {/* Europe */}
-            <path d="M 470 110 Q 510 100 540 115 Q 555 135 545 160 Q 525 175 495 170 Q 470 160 465 140 Q 462 122 470 110 Z" />
-            {/* Africa */}
-            <path d="M 490 200 Q 540 195 565 225 Q 575 270 555 320 Q 535 360 510 360 Q 485 350 478 310 Q 472 260 490 200 Z" />
-            {/* Asia */}
-            <path d="M 580 110 Q 680 95 770 120 Q 820 145 810 195 Q 790 230 720 235 Q 650 230 600 210 Q 570 180 580 110 Z" />
-            {/* Australia */}
-            <path d="M 770 320 Q 825 315 855 335 Q 865 360 840 375 Q 800 380 775 365 Q 760 345 770 320 Z" />
+        <svg viewBox="0 0 1000 500" className="absolute inset-0 h-full w-full" preserveAspectRatio="xMidYMid meet">
+          <defs>
+            <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+              <feGaussianBlur stdDeviation="8" result="coloredBlur" />
+              <feMerge>
+                <feMergeNode in="coloredBlur" />
+                <feMergeNode in="SourceGraphic" />
+              </feMerge>
+            </filter>
+          </defs>
+
+          {/* Ocean background */}
+          <rect x="0" y="0" width="1000" height="500" fill="#031026" />
+
+          {/* More detailed continent silhouettes — Midnight theme */}
+          <g fill="#1b1d20" stroke="rgba(220,225,230,0.06)" strokeWidth="0.6">
+            <path d="M120 115 C160 95 210 90 260 100 C300 110 320 140 325 170 C330 200 300 230 270 245 C235 260 195 245 165 220 C140 195 125 160 120 115 Z" />
+            <path d="M260 275 C290 270 310 295 320 330 C330 370 315 400 295 410 C275 420 260 405 255 380 C250 350 258 310 260 275 Z" />
+            <path d="M450 105 C485 95 520 100 550 115 C570 130 565 155 550 165 C530 175 505 170 490 160 C480 145 468 120 450 105 Z" />
+            <path d="M480 190 C520 185 545 210 560 245 C575 285 560 325 535 345 C510 365 490 360 480 335 C472 310 468 265 480 190 Z" />
+            <path d="M570 105 C640 95 720 105 780 125 C820 145 830 185 815 215 C790 245 730 255 690 250 C650 245 610 230 585 205 C570 170 570 125 570 105 Z" />
+            <path d="M760 325 C800 320 830 335 850 355 C860 375 845 390 825 395 C800 402 775 390 760 370 C755 350 755 335 760 325 Z" />
           </g>
 
-          {/* Lat/Lng faint guides */}
-          <g stroke="oklch(1 0 0 / 0.04)" strokeWidth="0.5">
+          {/* subtle lat/lng guides */}
+          <g stroke="rgba(255,255,255,0.02)" strokeWidth="0.4">
             <line x1="0" y1="250" x2="1000" y2="250" />
             <line x1="500" y1="0" x2="500" y2="500" />
           </g>
 
-          {/* Hotspots */}
+          {/* Detection zones (transparent circles with glowing stroke + pulse) */}
           {HOTSPOTS.map((h, i) => {
             const { x, y } = project(h.lat, h.lng);
             const color = SEV[h.severity];
-            const r = h.severity === "crit" ? 4 : h.severity === "high" ? 3.2 : 2.6;
+            const baseR = h.severity === "crit" ? 56 : h.severity === "high" ? 44 : h.severity === "med" ? 30 : 18;
             return (
               <g key={i}>
-                {/* Continuous slow pulse ring */}
-                <circle cx={x} cy={y} r={r}>
-                  <animate
-                    attributeName="r"
-                    values={`${r};${r * 4};${r}`}
-                    dur="2.4s"
-                    repeatCount="indefinite"
-                    begin={`${i * 0.18}s`}
-                  />
-                  <animate
-                    attributeName="opacity"
-                    values="0.6;0;0.6"
-                    dur="2.4s"
-                    repeatCount="indefinite"
-                    begin={`${i * 0.18}s`}
-                  />
-                  <animate attributeName="fill" to={color} fill="freeze" />
+                {/* translucent detection fill + glowing stroke */}
+                <circle cx={x} cy={y} r={baseR} fill={color} fillOpacity={0.3} stroke={color} strokeWidth={2.8} style={{ filter: "url(#glow)" }} />
+
+                {/* slow pulsing ring */}
+                <circle cx={x} cy={y} r={baseR} fill="none" stroke={color} strokeWidth={2} strokeOpacity={0.9}>
+                  <animate attributeName="r" values={`${baseR};${Math.round(baseR * 1.25)};${baseR}`} dur="2.6s" repeatCount="indefinite" begin={`${i * 0.18}s`} />
+                  <animate attributeName="opacity" values="0.9;0.45;0.9" dur="2.6s" repeatCount="indefinite" begin={`${i * 0.18}s`} />
                 </circle>
-                {/* Solid core */}
-                <circle cx={x} cy={y} r={r} fill={color}>
+
+                {/* solid core */}
+                <circle cx={x} cy={y} r={Math.max(2, Math.round(baseR * 0.16))} fill={color}>
                   <title>
                     {h.city}, {h.country} — {h.count.toLocaleString()} events
                   </title>
@@ -158,25 +152,20 @@ export function ThreatMap() {
             );
           })}
 
-          {/* Random "ping" attacks fired at hotspots */}
+          {/* Random "ping" attacks fired at hotspots (smaller ripples) */}
           {pings.map((p) => {
             const h = HOTSPOTS[p.idx];
             const { x, y } = project(h.lat, h.lng);
             const color = SEV[h.severity];
+            const maxR = h.severity === "crit" ? 74 : h.severity === "high" ? 60 : h.severity === "med" ? 42 : 28;
             return (
               <g key={p.id}>
-                <circle cx={x} cy={y} r="2" fill="none" stroke={color} strokeWidth="1.5">
-                  <animate attributeName="r" from="2" to="28" dur="2.2s" fill="freeze" />
-                  <animate
-                    attributeName="opacity"
-                    from="0.9"
-                    to="0"
-                    dur="2.2s"
-                    fill="freeze"
-                  />
+                <circle cx={x} cy={y} r="2" fill="none" stroke={color} strokeWidth="1.6" strokeOpacity="0.9">
+                  <animate attributeName="r" from="2" to={String(maxR)} dur="1.9s" fill="freeze" />
+                  <animate attributeName="opacity" from="0.9" to="0" dur="1.9s" fill="freeze" />
                 </circle>
-                <circle cx={x} cy={y} r="1.5" fill={color}>
-                  <animate attributeName="opacity" from="1" to="0" dur="2.2s" fill="freeze" />
+                <circle cx={x} cy={y} r="2" fill={color}>
+                  <animate attributeName="opacity" from="1" to="0" dur="1.9s" fill="freeze" />
                 </circle>
               </g>
             );
@@ -188,8 +177,8 @@ export function ThreatMap() {
           {(
             [
               ["Low", "var(--success)"],
-              ["Medium", "var(--primary)"],
-              ["High", "var(--warning)"],
+              ["Medium", "var(--warning)"],
+              ["High", "var(--critical)"],
               ["Critical", "var(--critical)"],
             ] as const
           ).map(([label, c]) => (

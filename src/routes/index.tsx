@@ -14,6 +14,7 @@ import { LearnGrid } from "@/components/LearnGrid";
 import { ApiSection } from "@/components/ApiSection";
 import { Playground } from "@/components/Playground";
 import { analyzeEmail, type ScanResult } from "@/lib/phishing";
+import { smoothScrollToId } from "@/lib/utils";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -103,10 +104,46 @@ function Index() {
           <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-3 text-xs text-muted-foreground sm:flex-row">
             <p>© {new Date().getFullYear()} Detect-Stats-Learn-Api. Built for security teams.</p>
             <div className="flex items-center gap-5">
-              <a className="transition hover:text-foreground" href="#scan">Detect</a>
-              <a className="transition hover:text-foreground" href="#stats">Stats</a>
-              <a className="transition hover:text-foreground" href="#learn">Learn</a>
-              <a className="transition hover:text-foreground" href="#api">API</a>
+              <a
+                className="transition hover:text-foreground"
+                href="#scan"
+                onClick={(e) => {
+                  e.preventDefault();
+                  smoothScrollToId("#scan");
+                }}
+              >
+                Detect
+              </a>
+              <a
+                className="transition hover:text-foreground"
+                href="#stats"
+                onClick={(e) => {
+                  e.preventDefault();
+                  smoothScrollToId("#stats");
+                }}
+              >
+                Stats
+              </a>
+              <a
+                className="transition hover:text-foreground"
+                href="#learn"
+                onClick={(e) => {
+                  e.preventDefault();
+                  smoothScrollToId("#learn");
+                }}
+              >
+                Learn
+              </a>
+              <a
+                className="transition hover:text-foreground"
+                href="#api"
+                onClick={(e) => {
+                  e.preventDefault();
+                  smoothScrollToId("#api");
+                }}
+              >
+                API
+              </a>
             </div>
           </div>
         </footer>

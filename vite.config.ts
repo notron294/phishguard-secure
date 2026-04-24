@@ -6,4 +6,12 @@
 // You can pass additional config via defineConfig({ vite: { ... } }) if needed.
 import { defineConfig } from "@lovable.dev/vite-tanstack-config";
 
-export default defineConfig();
+export default defineConfig({
+  vite: {
+    optimizeDeps: { include: ["react-simple-maps", "d3-geo"] },
+  },
+});
+
+optimizeDeps: {
+  include: ["react-simple-maps", "d3-geo"]
+}

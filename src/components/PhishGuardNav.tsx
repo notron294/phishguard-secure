@@ -1,5 +1,6 @@
 import { ShieldCheck, Github, ChevronDown } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
+import { smoothScrollToId } from "@/lib/utils";
 
 // X.com (Twitter) logo as inline SVG — Lucide doesn't ship the new X mark
 function XLogo({ className }: { className?: string }) {
@@ -18,31 +19,94 @@ const LANGS = [
 export function PhishGuardNav() {
   const [lang, setLang] = useState<"EN" | "DE">("EN");
   const [open, setOpen] = useState(false);
-  const ref = useRef<HTMLDivElement>(null);
+  const menuRef = useRef<HTMLDivElement>(null);
+  const headerRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
     const onClick = (e: MouseEvent) => {
-      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
+      if (menuRef.current && !menuRef.current.contains(e.target as Node)) setOpen(false);
     };
     document.addEventListener("mousedown", onClick);
     return () => document.removeEventListener("mousedown", onClick);
   }, []);
 
   return (
-    <header className="glass sticky top-0 z-50 border-b border-border">
+    <header ref={headerRef} className="glass sticky top-0 z-50 border-b border-border">
       <nav className="mx-auto flex h-14 max-w-6xl items-center justify-between px-6">
-        <a href="#top" className="flex items-center gap-2 text-sm font-semibold tracking-tight">
+        <a
+          href="#top"
+          onClick={(e) => {
+            e.preventDefault();
+            smoothScrollToId("#top");
+          }}
+          className="flex items-center gap-2 text-sm font-semibold tracking-tight"
+        >
           <span className="relative flex h-7 w-7 items-center justify-center rounded-lg bg-primary/15 text-primary">
             <ShieldCheck className="h-4 w-4" />
           </span>
           Detect-Stats-Learn-Api
         </a>
         <ul className="hidden items-center gap-8 text-xs text-muted-foreground md:flex">
-          <li><a className="transition hover:text-foreground" href="#scan">Detect</a></li>
-          <li><a className="transition hover:text-foreground" href="#stats">Stats</a></li>
-          <li><a className="transition hover:text-foreground" href="#learn">Learn</a></li>
-          <li><a className="transition hover:text-foreground" href="#api">API</a></li>
-          <li><a className="transition hover:text-foreground" href="#playground">Playground</a></li>
+          <li>
+            <a
+              className="transition hover:text-foreground"
+              href="#scan"
+              onClick={(e) => {
+                e.preventDefault();
+                smoothScrollToId("#scan");
+              }}
+            >
+              Detect
+            </a>
+          </li>
+          <li>
+            <a
+              className="transition hover:text-foreground"
+              href="#stats"
+              onClick={(e) => {
+                e.preventDefault();
+                smoothScrollToId("#stats");
+              }}
+            >
+              Stats
+            </a>
+          </li>
+          <li>
+            <a
+              className="transition hover:text-foreground"
+              href="#learn"
+              onClick={(e) => {
+                e.preventDefault();
+                smoothScrollToId("#learn");
+              }}
+            >
+              Learn
+            </a>
+          </li>
+          <li>
+            <a
+              className="transition hover:text-foreground"
+              href="#api"
+              onClick={(e) => {
+                e.preventDefault();
+                smoothScrollToId("#api");
+              }}
+            >
+              API
+            </a>
+          </li>
+          <li>
+            <a
+              className="transition hover:text-foreground"
+              href="#playground"
+              onClick={(e) => {
+                e.preventDefault();
+                smoothScrollToId("#playground");
+              }}
+            >
+              Playground
+            </a>
+          </li>
         </ul>
         <div className="flex items-center gap-2">
           <span className="hidden items-center gap-1.5 rounded-full border border-border bg-surface px-2.5 py-1 text-[10px] font-medium text-muted-foreground lg:flex">
@@ -71,7 +135,7 @@ export function PhishGuardNav() {
           </a>
 
           {/* Language toggle */}
-          <div className="relative" ref={ref}>
+          <div className="relative" ref={menuRef}>
             <button
               onClick={() => setOpen((o) => !o)}
               className="flex h-8 items-center gap-1 rounded-full border border-border bg-surface/60 px-2.5 text-[11px] font-medium text-foreground transition hover:border-border-strong"

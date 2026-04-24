@@ -1,5 +1,5 @@
 import { TrendingUp, TrendingDown, Flame } from "lucide-react";
-import { ThreatMap } from "./ThreatMap";
+import { PhishingMap } from "./PhishingMap";
 
 interface Threat {
   rank: number;
@@ -55,7 +55,13 @@ export function ThreatMarket() {
           </div>
         </div>
 
-        <ThreatMap />
+        <div style={{ width: "100%", height: "600px" }}>
+          <PhishingMap
+            pollIntervalMs={30000}
+            animateArcs={true}
+            onCampaignSelect={(campaign) => console.log("Selected:", campaign)}
+          />
+        </div>
 
         <div className="overflow-hidden rounded-2xl border border-border bg-surface/40 backdrop-blur">
           <div className="overflow-x-auto">
